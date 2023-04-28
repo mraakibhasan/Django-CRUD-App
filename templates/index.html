@@ -1,0 +1,92 @@
+{% extends "base.html" %}
+{% block content %}
+{% load static %}
+<div class="container">
+    <div class="row">
+        <div class="col-sm-4">
+            <h4 class="alert alert-info mt-3 text-center">Student Registration</h4>
+            {% if form_submitted %}
+                <div class="alert alert-success" role="alert">
+                    Form submitted successfully!
+                </div>
+            {% endif %}
+            <form method="post" action="" class="form-control p-4">
+                {% csrf_token %}
+                <div class="mb-3">
+                    <label for="exampleInputName" class="form-label">Name</label>
+                    <input type="text" name='name' class="form-control" id="exampleInputName1" aria-describedby="">
+                </div>
+                <div class="mb-3">
+                <label for="exampleInputEmail1" class="form-label">Email address</label>
+                <input type="email" name='email' class="form-control" id="exampleInputEmail1" aria-describedby="emailHelp">
+                </div>
+                <div class="mb-3">
+                    <label for="exampleInputPhone" class="form-label">Phone</label>
+                    <input type="number" name='phone' class="form-control" id="exampleInputPhone1" aria-describedby="">
+                </div>
+                <div class="mb-3">
+                <label for="exampleInputPassword1" class="form-label">Password</label>
+                <input type="password" name='password' class="form-control" id="exampleInputPassword1">
+                </div>
+                <div class="mb-3">
+                    <label for="inputAddress">Address</label>
+                    <input type="text" name='address' class="form-control" id="inputAddress" placeholder="1234 Main St">
+                </div>
+                <button type="submit" class="btn btn-danger" style="width: 100% !important;">Submit</button>
+            </form>
+        </div>
+        <div class="col-sm-8">
+            <h4 class="alert alert-info text-center mt-3">Student Informations</h4>
+            {%if student_data  %}
+                    <table class="table table-hover">
+                        <thead>
+                        <tr>
+                            <th scope="col">Id</th>
+                            <th scope="col">Name</th>
+                            <th scope="col">Email</th>
+                            <th scope="col">Phone</th>
+                            <th scope="col">Address</th>
+                            <th scope="col">Action</th>
+                        </tr>
+                        </thead>
+                        <tbody>
+                        {% for students in student_data %}
+                        <tr>
+                            <th scope="row">{{students.id}}</th>
+                            <td>{{students.name}}</td>
+                            <td>{{students.email}}</td>
+                            <td>{{students.phone}}</td>
+                            <td>{{students.address}}</td>
+                            <td>
+                                <a href="{%url 'update_student' students.id%}" class='btn btn-sm btn-warning'>Edit</a>
+                                <a href="{%url 'deletestudent' students.id%}" class='btn btn-sm btn-danger'>Delete</a>
+                            </td>
+                        </tr>
+                        {% endfor %}
+                        </tbody>
+                    </table>
+                    <nav aria-label="Page navigation example">
+                        <ul class="pagination justify-content-end">
+                            {% if student_data.has_previous%}
+                          <li class="page-item">
+                            <a class="page-link" href="/?page={{student_data.previous_page_number}}" tabindex="-1">Previous</a>
+                          </li>
+                          {%endif%}
+                          {% for page_num in page_list %}
+                          <li class="page-item"><a class="page-link" href="/?page={{page_num}}">{{page_num}}</a></li>
+                          {% endfor %}
+                          {%if student_data.has_next%}
+                          <li class="page-item">
+                            <a class="page-link" href="/?page={{student_data.next_page_number}}">Next</a>
+                          </li>
+                          {%endif%}
+                        </ul>
+                      </nav>
+            {%else%}
+                    <h5 class="alert alert-danger">No Data Found</h5>
+            {%endif%}
+        </div>
+    </div>
+</div>
+
+{% endblock content %}
